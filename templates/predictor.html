@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Predictor | AgriForecast ML</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--sb:#fff;--cb:#fff;--bg:#f0f4f1;--br:#d1d9d4;--tx:#191c1d;--tm:#5a6b62;--pr:#012d1d;--sc:#1f6d1a;--ib:#f3f4f5;--cg:#e2e8e4}
+.dark{--sb:#0f1a14;--cb:#162019;--bg:#0b120e;--br:#243328;--tx:#e2ede6;--tm:#8aaa94;--pr:#4ade80;--sc:#86efac;--ib:#1a2b1e;--cg:#1e3025}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--tx);font-family:Inter,sans-serif;margin:0}
+.sidebar{background:var(--sb)}.card{background:var(--cb);border-color:var(--br)}
+.nl{color:var(--tm);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;text-decoration:none;transition:background .15s}
+.nl:hover{background:var(--ib)}.na{background:#012d1d!important;color:#fff!important}.dark .na{background:#166534!important}
+.ms{font-family:'Material Symbols Outlined';font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.tbtn{background:var(--ib);border:1px solid var(--br);color:var(--tx);border-radius:8px;padding:7px 11px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600}
+select,input{background:var(--ib);border:1px solid var(--br);color:var(--tx);border-radius:8px;padding:8px 12px;font-size:13px;outline:none;width:100%}
+select:focus,input:focus{border-color:#1f6d1a;box-shadow:0 0 0 2px rgba(31,109,26,.15)}
+.hbtn{border:1px solid var(--br);background:var(--ib);color:var(--tx);border-radius:8px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;flex:1;transition:all .15s}
+.hbtn.active{background:#012d1d;color:#fff;border-color:#012d1d}.dark .hbtn.active{background:#166534;border-color:#166534}
+.spin{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.show{animation:fadeUp .35s ease forwards}@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--br);border-radius:3px}
+</style>
+</head>
+<body>
+<div style="display:flex;min-height:100vh">
+<aside class="sidebar hidden md:flex flex-col border-r z-50" style="width:256px;height:100vh;position:fixed;left:0;top:0;padding:16px;border-color:var(--br)">
+  <div style="margin-bottom:24px;display:flex;align-items:center;gap:10px;padding:0 4px">
+    <span class="ms" style="font-size:30px;color:#1f6d1a">agri</span>
+    <div><div style="font-family:Manrope;font-size:15px;font-weight:800;color:var(--pr)">AgriForecast ML</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--tm)">ML-DRIVEN INSIGHTS</div></div>
+  </div>
+  <nav style="flex:1;display:flex;flex-direction:column;gap:3px">
+    <a class="nl" href="dashboard.html"><span class="ms">dashboard</span>Dashboard</a>
+    <a class="nl na" href="predictor.html"><span class="ms">query_stats</span>Predictor</a>
+    <a class="nl" href="analytics.html"><span class="ms">analytics</span>Analytics</a>
+    <a class="nl" href="portfolio.html"><span class="ms">inventory_2</span>Portfolio</a>
+    <a class="nl" href="history.html"><span class="ms">history</span>History</a>
+  </nav>
+</aside>
+<main style="flex:1;padding:20px 20px 90px" class="md:ml-64">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h2 style="font-family:Manrope;font-size:22px;font-weight:800;color:var(--pr);margin:0">Crop Price Predictor</h2>
+      <p style="font-size:13px;color:var(--tm);margin:3px 0 0">RandomForest ML — region-by-region forecasting in ₹ INR</p>
+    </div>
+    <button class="tbtn" onclick="toggleDark()"><span class="ms" id="tico" style="font-size:18px">dark_mode</span></button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:18px" class="lg:grid-cols-5">
+    <!-- Input Panel -->
+    <div class="card border rounded-xl lg:col-span-2" style="padding:22px">
+      <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0 0 18px">Prediction Parameters</h3>
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);display:block;margin-bottom:6px">SELECT CROP</label>
+        <select id="csel"></select>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);display:block;margin-bottom:6px">SELECT REGION</label>
+        <select id="rsel"></select>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);display:block;margin-bottom:8px">FORECAST HORIZON</label>
+        <div style="display:flex;gap:6px">
+          <button class="hbtn" data-m="1" onclick="setH(1,this)">1M</button>
+          <button class="hbtn active" data-m="3" onclick="setH(3,this)">3M</button>
+          <button class="hbtn" data-m="6" onclick="setH(6,this)">6M</button>
+          <button class="hbtn" data-m="12" onclick="setH(12,this)">12M</button>
+        </div>
+      </div>
+      <details style="margin-bottom:18px">
+        <summary style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);cursor:pointer;margin-bottom:8px">ADVANCED INPUTS (OPTIONAL)</summary>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+          <div><label style="font-size:12px;color:var(--tm);display:block;margin-bottom:4px">Rainfall (mm)</label><input type="number" id="rain" value="80"/></div>
+          <div><label style="font-size:12px;color:var(--tm);display:block;margin-bottom:4px">Temperature (°C)</label><input type="number" id="temp" value="25"/></div>
+        </div>
+      </details>
+      <button id="pbtn" onclick="runPred()" style="width:100%;background:#012d1d;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s">
+        <span class="ms" id="pbtn-icon">neurology</span> RUN ML PREDICTION
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div style="display:flex;flex-direction:column;gap:16px" class="lg:col-span-3">
+      <div id="rcard" class="card border rounded-xl" style="padding:22px;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);margin-bottom:4px">PREDICTED PRICE</div>
+            <div id="rprice" style="font-family:Manrope;font-size:36px;font-weight:800;color:var(--pr)">₹0</div>
+            <div id="rmeta" style="font-size:12px;color:var(--tm);margin-top:2px"></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);margin-bottom:4px">CONFIDENCE</div>
+            <div id="rconf" style="font-family:Manrope;font-size:26px;font-weight:800;color:#1f6d1a">—</div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="background:var(--ib);border-radius:6px;height:8px;overflow:hidden">
+            <div id="cbar" style="height:8px;border-radius:6px;background:#1f6d1a;transition:width 1s ease-out;width:0%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--tm);margin-top:4px"><span>LOW</span><span>HIGH CONFIDENCE</span></div>
+        </div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm);margin-bottom:8px">TIMELINE FORECAST</div>
+        <div id="timeline" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px"></div>
+        <div id="sbadge" style="text-align:center;padding:9px;border-radius:8px;font-size:13px;font-weight:600"></div>
+      </div>
+
+      <div id="cht" class="card border rounded-xl" style="padding:22px;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0">Price Forecast Chart (₹)</h3>
+          <div style="display:flex;gap:12px;font-size:11px;color:var(--tm)">
+            <span>── Historical</span><span style="color:#1f6d1a">--- Forecast</span>
+          </div>
+        </div>
+        <canvas id="fchart" height="120"></canvas>
+      </div>
+
+      <div id="regcard" class="card border rounded-xl" style="padding:22px;display:none">
+        <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0 0 14px">Region-by-Region Price Comparison (₹)</h3>
+        <div id="regbars" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16" style="background:var(--sb);border-top:1px solid var(--br)">
+  <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">dashboard</span>Home</a>
+  <a href="predictor.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;font-weight:700;color:#1f6d1a;text-decoration:none"><span class="ms" style="font-size:22px">query_stats</span>Predict</a>
+  <a href="analytics.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">analytics</span>Analytics</a>
+  <a href="portfolio.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">inventory_2</span>Portfolio</a>
+  <a href="history.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">history</span>History</a>
+</nav>
+<script>
+const API='http://localhost:5000';
+let fChart=null,selM=3;
+function applyTheme(dark){document.documentElement.classList.toggle('dark',dark);document.getElementById('tico').textContent=dark?'light_mode':'dark_mode';localStorage.setItem('agri_theme',dark?'dark':'light');}
+function toggleDark(){applyTheme(!document.documentElement.classList.contains('dark'));}
+applyTheme(localStorage.getItem('agri_theme')==='dark');
+function setH(m,el){selM=m;document.querySelectorAll('.hbtn').forEach(b=>{b.classList.remove('active')});el.classList.add('active');}
+async function loadMeta(){
+  const d=(await (await fetch(`${API}/api/meta`)).json());
+  document.getElementById('csel').innerHTML=d.crops.map(c=>`<option value="${c.name}">${c.name} (/${c.unit})</option>`).join('');
+  document.getElementById('rsel').innerHTML=d.regions.map(r=>`<option value="${r}">${r}</option>`).join('');
+  const p=new URLSearchParams(window.location.search);
+  if(p.get('crop'))document.getElementById('csel').value=p.get('crop');
+  if(p.get('region'))document.getElementById('rsel').value=p.get('region');
+  if(p.get('crop')||p.get('region'))runPred();
+}
+async function runPred(){
+  const crop=document.getElementById('csel').value,region=document.getElementById('rsel').value;
+  const rain=parseFloat(document.getElementById('rain').value)||80;
+  const temp=parseFloat(document.getElementById('temp').value)||25;
+  if(!crop||!region)return alert('Select a crop and region.');
+  const btn=document.getElementById('pbtn');
+  document.getElementById('pbtn-icon').classList.add('spin');
+  btn.disabled=true;btn.style.opacity='.7';
+  try{
+    const d=(await (await fetch(`${API}/api/predict`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({crop,region,months:selM,rainfall:rain,temperature:temp})})).json());
+    const pred=d.prediction;
+    const rc=document.getElementById('rcard');rc.style.display='block';rc.classList.add('show');
+    document.getElementById('rprice').textContent='₹'+Number(pred.predicted_price_inr).toLocaleString('en-IN',{maximumFractionDigits:0});
+    document.getElementById('rmeta').textContent=`${crop} · ${region} · ${pred.forecast_date} · per ${pred.unit}`;
+    document.getElementById('rconf').textContent=pred.confidence+'%';
+    setTimeout(()=>{document.getElementById('cbar').style.width=pred.confidence+'%'},100);
+    const sb=document.getElementById('sbadge');
+    const dk=document.documentElement.classList.contains('dark');
+    if(pred.is_peak_season){sb.style.background=dk?'#14532d':'#dcfce7';sb.style.color=dk?'#86efac':'#166534';sb.textContent='🌾 Peak Season — Elevated prices expected';}
+    else{sb.style.background='var(--ib)';sb.style.color='var(--tm)';sb.textContent='📦 Off-Season — Stable or moderate prices';}
+    document.getElementById('timeline').innerHTML=d.timeline.map(t=>`<div style="background:var(--ib);border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--tm)">${t.label}</div><div style="font-family:Manrope;font-size:14px;font-weight:800;color:var(--pr);margin-top:2px">₹${Number(t.price_inr).toLocaleString('en-IN',{maximumFractionDigits:0})}</div><div style="font-size:9px;color:var(--tm)">${t.confidence}% conf</div></div>`).join('');
+    const gc=dk?'#1e3025':'#e2e8e4',tc=dk?'#8aaa94':'#5a6b62';
+    document.getElementById('cht').style.display='block';
+    const series=d.chart_series;
+    if(fChart)fChart.destroy();
+    fChart=new Chart(document.getElementById('fchart'),{type:'line',data:{labels:series.map(s=>s.date),datasets:[
+      {label:'Historical',data:series.map(s=>s.is_forecast?null:s.price_inr),borderColor:dk?'#4ade80':'#012d1d',backgroundColor:dk?'rgba(74,222,128,.07)':'rgba(1,45,29,.06)',borderWidth:2.5,fill:true,tension:0.4,spanGaps:false},
+      {label:'Forecast',data:series.map(s=>s.is_forecast?s.price_inr:null),borderColor:'#1f6d1a',borderDash:[7,4],borderWidth:2,fill:false,tension:0.4,spanGaps:false,pointBackgroundColor:'#1f6d1a'}
+    ]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'₹'+Math.round(ctx.parsed.y).toLocaleString('en-IN')}}},scales:{y:{grid:{color:gc},ticks:{color:tc,callback:v=>'₹'+Math.round(v).toLocaleString('en-IN')}},x:{grid:{display:false},ticks:{color:tc,maxTicksLimit:8}}}}});
+    document.getElementById('regcard').style.display='block';
+    const mx=Math.max(...d.region_comparison.map(r=>r.price_inr));
+    document.getElementById('regbars').innerHTML=d.region_comparison.map(r=>`<div style="display:flex;align-items:center;gap:10px"><div style="width:110px;font-size:12px;font-weight:500;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.region}</div><div style="flex:1;background:var(--ib);border-radius:4px;height:8px"><div style="height:8px;border-radius:4px;background:${r.is_peak_season?'#1f6d1a':'var(--pr)'};width:${(r.price_inr/mx*100).toFixed(1)}%"></div></div><div style="width:80px;text-align:right;font-size:12px;font-weight:700;font-family:monospace;color:var(--pr)">₹${Number(r.price_inr).toLocaleString('en-IN',{maximumFractionDigits:0})}</div></div>`).join('');
+  }catch(e){alert('Prediction failed. Is the server running?');console.error(e);}
+  finally{document.getElementById('pbtn-icon').classList.remove('spin');btn.disabled=false;btn.style.opacity='1';}
+}
+loadMeta();
+</script>
+</body></html>

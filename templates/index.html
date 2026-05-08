@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a12;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.09);
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --card: rgba(15,20,35,0.7);
+    --glow: rgba(124,58,237,0.4);
+    --glow2: rgba(6,182,212,0.3);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ─── BLOBS ─── */
+  .blob-wrap{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .blob{position:absolute;border-radius:50%;filter:blur(80px);animation:morph 12s ease-in-out infinite alternate;}
+  .blob1{width:600px;height:600px;background:rgba(124,58,237,0.18);top:-200px;left:-200px;animation-duration:14s;}
+  .blob2{width:500px;height:500px;background:rgba(6,182,212,0.14);bottom:-150px;right:-100px;animation-duration:17s;animation-delay:-5s;}
+  .blob3{width:300px;height:300px;background:rgba(245,158,11,0.1);top:50%;left:60%;animation-duration:11s;animation-delay:-3s;}
+  @keyframes morph{
+    0%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%;transform:rotate(0deg) scale(1);}
+    25%{border-radius:40% 60% 70% 30%/40% 70% 30% 60%;transform:rotate(90deg) scale(1.05);}
+    50%{border-radius:70% 30% 50% 50%/30% 60% 40% 70%;transform:rotate(180deg) scale(0.95);}
+    75%{border-radius:30% 70% 20% 80%/50% 40% 60% 50%;transform:rotate(270deg) scale(1.08);}
+    100%{border-radius:50% 50% 60% 40%/60% 40% 50% 60%;transform:rotate(360deg) scale(1);}
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before{
+    content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity:0.3;
+  }
+
+  /* ─── NAV ─── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.2rem 3rem;
+    background:rgba(6,10,18,0.6);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-logo{
+    font-family:'Syne',sans-serif;
+    font-size:1.4rem;font-weight:800;
+    background:linear-gradient(135deg,#7c3aed,#06b6d4);
+    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    cursor:pointer;
+  }
+  .nav-links{display:flex;gap:2rem;}
+  .nav-links a{
+    color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;
+    transition:color .3s;letter-spacing:.03em;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-edit-btn{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#fff;padding:.5rem 1.2rem;border-radius:50px;
+    font-size:.85rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;
+    transition:opacity .3s,transform .2s;
+  }
+  .nav-edit-btn:hover{opacity:.85;transform:scale(1.03);}
+
+  /* ─── LAYOUT ─── */
+  main{position:relative;z-index:2;}
+  section{min-height:100vh;padding:7rem 3rem 4rem;max-width:1200px;margin:0 auto;}
+
+  /* ─── HERO ─── */
+  #about{
+    display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;min-height:100vh;
+  }
+  .hero-label{
+    font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);
+    font-weight:500;margin-bottom:1.2rem;
+  }
+  .hero-name{
+    font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,4.2rem);font-weight:800;
+    line-height:1.1;margin-bottom:1rem;
+  }
+  .hero-name span{
+    background:linear-gradient(135deg,#7c3aed 0%,#06b6d4 50%,#f59e0b 100%);
+    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero-role{
+    font-size:1.3rem;color:var(--muted);font-weight:300;margin-bottom:1.5rem;
+    font-style:italic;
+  }
+  .hero-bio{color:var(--muted);line-height:1.8;font-size:1rem;margin-bottom:2rem;}
+  .hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#fff;padding:.75rem 1.8rem;border-radius:50px;
+    font-size:.95rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;
+    transition:transform .2s,box-shadow .3s;
+    box-shadow:0 0 30px rgba(124,58,237,0.4);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(124,58,237,0.6);}
+  .btn-secondary{
+    background:transparent;border:1px solid var(--border);color:var(--text);
+    padding:.75rem 1.8rem;border-radius:50px;font-size:.95rem;font-weight:500;
+    cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color .3s,background .3s;
+  }
+  .btn-secondary:hover{border-color:var(--accent2);background:rgba(6,182,212,0.08);}
+
+  .hero-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:2rem;
+    backdrop-filter:blur(20px);
+    position:relative;overflow:hidden;
+  }
+  .hero-card::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04));
+    pointer-events:none;
+  }
+  .avatar-ring{
+    width:140px;height:140px;margin:0 auto 1.5rem;
+    border-radius:50%;padding:3px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));
+    animation:spin-ring 8s linear infinite;
+  }
+  @keyframes spin-ring{to{transform:rotate(360deg);}}
+  .avatar-inner{
+    width:100%;height:100%;border-radius:50%;
+    background:linear-gradient(135deg,#1e1b4b,#164e63);
+    display:flex;align-items:center;justify-content:center;
+    font-size:3.5rem;animation:spin-ring 8s linear infinite reverse;
+  }
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+  .stat{
+    background:var(--surface2);border:1px solid var(--border);border-radius:16px;
+    padding:1rem;text-align:center;
+  }
+  .stat-num{
+    font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .stat-label{font-size:.75rem;color:var(--muted);margin-top:.2rem;letter-spacing:.05em;}
+
+  /* ─── SECTION HEADERS ─── */
+  .sec-header{text-align:center;margin-bottom:3.5rem;}
+  .sec-tag{
+    display:inline-block;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--accent2);font-weight:600;margin-bottom:.8rem;
+    background:rgba(6,182,212,.1);padding:.3rem .8rem;border-radius:50px;
+    border:1px solid rgba(6,182,212,.2);
+  }
+  .sec-title{
+    font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;
+  }
+  .sec-line{
+    width:60px;height:3px;margin:.8rem auto 0;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;
+  }
+
+  /* ─── GLASS CARD ─── */
+  .glass{
+    background:var(--card);border:1px solid var(--border);border-radius:20px;
+    backdrop-filter:blur(20px);padding:1.8rem;position:relative;overflow:hidden;
+    transition:border-color .3s,transform .3s,box-shadow .3s;
+  }
+  .glass:hover{
+    border-color:rgba(124,58,237,.4);transform:translateY(-4px);
+    box-shadow:0 20px 60px rgba(124,58,237,.15);
+  }
+  .glass::after{
+    content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+    background:radial-gradient(circle at 30% 30%,rgba(124,58,237,.05),transparent 60%);
+    pointer-events:none;
+  }
+
+  /* ─── RESUME ─── */
+  #resume{padding-top:5rem;}
+  .resume-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .resume-col h3{
+    font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;
+    margin-bottom:1.5rem;color:var(--accent2);letter-spacing:.05em;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  .resume-col h3::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent2);}
+  .timeline{display:flex;flex-direction:column;gap:1.2rem;}
+  .tl-item{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:1.4rem;position:relative;
+    border-left:3px solid var(--accent);
+    transition:border-color .3s,transform .2s;
+  }
+  .tl-item:hover{border-left-color:var(--accent2);transform:translateX(4px);}
+  .tl-year{font-size:.75rem;color:var(--accent3);font-weight:600;letter-spacing:.1em;margin-bottom:.3rem;}
+  .tl-title{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:.2rem;font-size:1rem;}
+  .tl-org{font-size:.85rem;color:var(--accent2);margin-bottom:.5rem;font-weight:500;}
+  .tl-desc{font-size:.85rem;color:var(--muted);line-height:1.6;}
+
+  /* Skills */
+  .skills-wrap{margin-top:1.5rem;}
+  .skill-item{margin-bottom:1rem;}
+  .skill-header{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.4rem;}
+  .skill-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+  .skill-fill{
+    height:100%;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width 1s ease;
+  }
+
+  /* ─── PROJECTS ─── */
+  #projects{padding-top:5rem;}
+  .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem;}
+  .proj-card{
+    background:var(--card);border:1px solid var(--border);border-radius:20px;
+    overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;
+    cursor:pointer;
+  }
+  .proj-card:hover{transform:translateY(-6px);box-shadow:0 30px 80px rgba(0,0,0,.4);border-color:rgba(124,58,237,.4);}
+  .proj-thumb{
+    height:180px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;font-size:3rem;
+  }
+  .proj-thumb .bg{
+    position:absolute;inset:0;
+    background:linear-gradient(135deg,var(--c1,#1e1b4b),var(--c2,#164e63));
+  }
+  .proj-thumb::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 70% 30%,rgba(255,255,255,.05),transparent);
+  }
+  .proj-emoji{position:relative;z-index:1;}
+  .proj-body{padding:1.4rem;}
+  .proj-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.5rem;}
+  .proj-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
+  .proj-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .tag{
+    font-size:.72rem;padding:.25rem .6rem;border-radius:50px;font-weight:500;
+    background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:var(--accent);
+  }
+  .tag.cyan{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.25);color:var(--accent2);}
+  .tag.amber{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.25);color:var(--accent3);}
+  .proj-links{display:flex;gap:.6rem;margin-top:1rem;}
+  .proj-link{
+    font-size:.8rem;color:var(--muted);text-decoration:none;
+    padding:.3rem .8rem;border:1px solid var(--border);border-radius:50px;
+    transition:color .2s,border-color .2s;
+  }
+  .proj-link:hover{color:var(--accent2);border-color:var(--accent2);}
+
+  /* ─── PUBLICATIONS ─── */
+  #publications{padding-top:5rem;}
+  .pub-list{display:flex;flex-direction:column;gap:1.2rem;}
+  .pub-item{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;
+    padding:1.6rem;display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;
+    transition:border-color .3s,transform .2s;
+  }
+  .pub-item:hover{border-color:rgba(6,182,212,.3);transform:translateX(4px);}
+  .pub-year-badge{
+    font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    min-width:50px;padding-top:.15rem;
+  }
+  .pub-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.3rem;}
+  .pub-authors{font-size:.82rem;color:var(--accent3);margin-bottom:.3rem;font-style:italic;}
+  .pub-venue{font-size:.82rem;color:var(--muted);margin-bottom:.6rem;}
+  .pub-badges{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .badge{
+    font-size:.7rem;padding:.2rem .6rem;border-radius:50px;font-weight:600;
+    background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:var(--accent3);
+  }
+  .badge.green{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.25);color:#10b981;}
+
+  /* ─── CERTIFICATIONS ─── */
+  #certifications{padding-top:5rem;}
+  .cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
+  .cert-card{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;
+    display:flex;flex-direction:column;gap:1rem;
+    transition:transform .3s,border-color .3s,box-shadow .3s;
+    position:relative;overflow:hidden;
+  }
+  .cert-card:hover{transform:translateY(-4px);border-color:rgba(245,158,11,.35);
+    box-shadow:0 20px 60px rgba(245,158,11,.08);}
+  .cert-card::before{
+    content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;
+    border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.08),transparent);
+    pointer-events:none;
+  }
+  .cert-icon{font-size:2rem;}
+  .cert-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;}
+  .cert-issuer{font-size:.82rem;color:var(--accent2);font-weight:500;}
+  .cert-date{font-size:.78rem;color:var(--muted);}
+  .cert-id{font-size:.72rem;color:var(--muted);font-family:monospace;margin-top:.2rem;}
+  .cert-verify{
+    margin-top:auto;font-size:.78rem;color:var(--accent);
+    text-decoration:none;font-weight:500;
+    display:inline-flex;align-items:center;gap:.3rem;
+  }
+  .cert-verify:hover{color:var(--accent2);}
+  .verified-badge{
+    display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;
+    background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
+    color:#10b981;padding:.2rem .6rem;border-radius:50px;font-weight:600;
+    width:fit-content;
+  }
+
+  /* ─── EDIT MODAL ─── */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;z-index:1000;
+    background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+    align-items:center;justify-content:center;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#0d1220;border:1px solid var(--border);border-radius:24px;
+    padding:2rem;width:90%;max-width:700px;max-height:85vh;overflow-y:auto;
+    box-shadow:0 40px 120px rgba(0,0,0,.6);
+    animation:modal-in .3s ease;
+  }
+  @keyframes modal-in{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+  .modal-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;}
+  .modal-close{
+    background:var(--surface2);border:1px solid var(--border);color:var(--text);
+    width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;
+    display:flex;align-items:center;justify-content:center;transition:background .2s;
+  }
+  .modal-close:hover{background:rgba(239,68,68,.2);}
+  .form-group{margin-bottom:1.2rem;}
+  .form-label{font-size:.82rem;color:var(--muted);font-weight:500;margin-bottom:.4rem;display:block;letter-spacing:.05em;}
+  .form-input,.form-textarea,.form-select{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border);
+    color:var(--text);border-radius:10px;padding:.7rem 1rem;font-size:.9rem;
+    font-family:'DM Sans',sans-serif;transition:border-color .2s,box-shadow .2s;
+    outline:none;
+  }
+  .form-input:focus,.form-textarea:focus{
+    border-color:var(--accent2);box-shadow:0 0 0 3px rgba(6,182,212,.1);
+  }
+  .form-textarea{resize:vertical;min-height:90px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .modal-footer{display:flex;justify-content:flex-end;gap:.8rem;margin-top:1.5rem;}
+  .btn-cancel{
+    background:transparent;border:1px solid var(--border);color:var(--muted);
+    padding:.6rem 1.4rem;border-radius:50px;cursor:pointer;font-family:'DM Sans',sans-serif;
+    font-size:.9rem;transition:border-color .2s;
+  }
+  .btn-cancel:hover{border-color:var(--text);color:var(--text);}
+  .btn-save{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#fff;padding:.6rem 1.6rem;border-radius:50px;
+    cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;
+    transition:opacity .2s;
+  }
+  .btn-save:hover{opacity:.85;}
+
+  /* ─── ADD BUTTONS ─── */
+  .add-btn{
+    width:100%;background:transparent;border:1px dashed rgba(124,58,237,.3);
+    color:var(--accent);border-radius:16px;padding:1rem;cursor:pointer;
+    font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;
+    transition:border-color .2s,background .2s;display:flex;align-items:center;
+    justify-content:center;gap:.5rem;
+  }
+  .add-btn:hover{border-color:var(--accent);background:rgba(124,58,237,.06);}
+  .edit-item-btn{
+    position:absolute;top:.8rem;right:.8rem;
+    background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.25);
+    color:var(--accent);border-radius:8px;padding:.25rem .6rem;
+    font-size:.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;
+    transition:background .2s;opacity:0;
+  }
+  .tl-item:hover .edit-item-btn,
+  .proj-card:hover .edit-item-btn,
+  .pub-item:hover .edit-item-btn,
+  .cert-card:hover .edit-item-btn{opacity:1;}
+
+  /* ─── CONTACT FOOTER ─── */
+  footer{
+    position:relative;z-index:2;text-align:center;padding:4rem 3rem;
+    border-top:1px solid var(--border);
+  }
+  .footer-title{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-bottom:.8rem;}
+  .footer-sub{color:var(--muted);margin-bottom:2rem;}
+  .social-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+  .social-link{
+    background:var(--surface2);border:1px solid var(--border);color:var(--text);
+    padding:.6rem 1.2rem;border-radius:50px;text-decoration:none;font-size:.85rem;
+    font-weight:500;transition:border-color .2s,background .2s;display:flex;align-items:center;gap:.4rem;
+  }
+  .social-link:hover{border-color:var(--accent2);background:rgba(6,182,212,.08);}
+  .footer-copy{color:var(--muted);font-size:.78rem;margin-top:2rem;}
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem;}
+    .nav-links{display:none;}
+    section{padding:6rem 1.5rem 3rem;}
+    #about{grid-template-columns:1fr;gap:2.5rem;}
+    .resume-grid{grid-template-columns:1fr;}
+    .projects-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+    footer{padding:3rem 1.5rem;}
+  }
+
+  /* ─── SCROLL ANIMATIONS ─── */
+  .fade-up{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
+  .fade-up.visible{opacity:1;transform:translateY(0);}
+  
+  /* ─── NOTIFICATION ─── */
+  .toast{
+    position:fixed;bottom:2rem;right:2rem;z-index:9999;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;padding:.8rem 1.4rem;border-radius:50px;font-size:.85rem;font-weight:600;
+    animation:toast-in .3s ease;box-shadow:0 10px 40px rgba(124,58,237,.4);
+  }
+  @keyframes toast-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ─── CONTACT FORM IN FOOTER ─── */
+  .contact-form{max-width:500px;margin:0 auto 2rem;display:grid;gap:.8rem;}
+  .contact-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+  @media(max-width:500px){.contact-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- Background Blobs -->
+<div class="blob-wrap">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" id="nav-name">Sajal Sharma</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#resume">Resume</a>
+    <a href="#projects">Projects</a>
+    <a href="#publications">Publications</a>
+    <a href="#certifications">Certifications</a>
+  </div>
+  <button class="nav-edit-btn" onclick="openProfileEdit()">✏️ Edit Profile</button>
+</nav>
+
+<main>
+<!-- ══════════════ ABOUT ══════════════ -->
+<section id="about">
+  <div class="hero-left fade-up">
+    <div class="hero-label">👋 Hello, World</div>
+    <h1 class="hero-name"><span id="display-name">Sajal Sharma</span></h1>
+    <div class="hero-role" id="display-role">Cyber Security Student</div>
+    <p class="hero-bio" id="display-bio">
+      Passionate Cybersecurity student with a solid foundation in network security and ethical hacking. Experienced in building home labs, conducting vulnerability assessments using Nmap and Metasploit, and analyzing traffic with Wireshark. Eager to leverage hands-on skills in threat detection and incident response to protect digital infrastructure. Actively seeking a [SOC Analyst/Junior Security] role.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View My Work</button>
+      <button class="btn-secondary" onclick="document.getElementById('footer').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
+    </div>
+    <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+      <span style="font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;">
+        📍 <span id="display-location">Greater Noida, UP</span>
+      </span>
+      <span style="font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;">
+        📧 <span id="display-email">sharmasajal199@gmail.com</span>
+      </span>
+    </div>
+  </div>
+  <div class="fade-up" style="animation-delay:.2s;">
+    <div class="hero-card">
+      <div class="avatar-ring">
+        <div class="avatar-inner" id="display-avatar">🧑‍💻</div>
+      </div>
+      <div style="text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;" id="display-name2">Sajal Sharma</div>
+      <div style="text-align:center;font-size:.85rem;color:var(--muted);margin-top:.3rem;" id="display-tagline">Building the future, one commit at a time.</div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-num" id="stat-projects">12+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-exp">5 Yrs</div>
+          <div class="stat-label">Experience</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-pubs">8</div>
+          <div class="stat-label">Publications</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-certs">6</div>
+          <div class="stat-label">Certifications</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RESUME ══════════════ -->
+<section id="resume" style="min-height:auto;">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Resume</div>
+    <h2 class="sec-title">Experience & Skills</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="resume-grid">
+    <div class="fade-up">
+      <div class="resume-col">
+        <h3>Work Experience</h3>
+        <div class="timeline" id="exp-list"></div>
+        <button class="add-btn" style="margin-top:1rem;" onclick="openAddExp()">+ Add Experience</button>
+      </div>
+      <div class="resume-col" style="margin-top:2rem;">
+        <h3>Education</h3>
+        <div class="timeline" id="edu-list"></div>
+        <button class="add-btn" style="margin-top:1rem;" onclick="openAddEdu()">+ Add Education</button>
+      </div>
+    </div>
+    <div class="fade-up" style="animation-delay:.2s;">
+      <div class="resume-col">
+        <h3>Technical Skills</h3>
+        <div class="skills-wrap" id="skills-list"></div>
+        <button class="add-btn" style="margin-top:1rem;" onclick="openAddSkill()">+ Add Skill</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROJECTS ══════════════ -->
+<section id="projects" style="min-height:auto;padding-top:3rem;">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Portfolio</div>
+    <h2 class="sec-title">Featured Projects</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="projects-grid" id="proj-list"></div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <button class="add-btn" style="max-width:400px;margin:0 auto;" onclick="openAddProj()">+ Add Project</button>
+  </div>
+</section>
+
+<!-- ══════════════ PUBLICATIONS ══════════════ -->
+<section id="publications" style="min-height:auto;padding-top:3rem;">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Research</div>
+    <h2 class="sec-title">Publications</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="pub-list" id="pub-list"></div>
+  <button class="add-btn" style="margin-top:1.2rem;" onclick="openAddPub()">+ Add Publication</button>
+</section>
+
+<!-- ══════════════ CERTIFICATIONS ══════════════ -->
+<section id="certifications" style="min-height:auto;padding-top:3rem;">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Credentials</div>
+    <h2 class="sec-title">Certifications</h2>
+    <div class="sec-line"></div>
+  </div>
+  <div class="cert-grid" id="cert-list"></div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <button class="add-btn" style="max-width:400px;margin:0 auto;" onclick="openAddCert()">+ Add Certification</button>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER / CONTACT -->
+<footer id="footer">
+  <div class="blob-wrap" style="position:absolute;height:100%;overflow:hidden;">
+    <div class="blob" style="width:300px;height:300px;background:rgba(124,58,237,.1);top:-100px;left:20%;animation-duration:10s;"></div>
+  </div>
+  <div style="position:relative;z-index:1;">
+    <div class="footer-title">Let's Connect ✨</div>
+    <p class="footer-sub">Open to collaborations, research opportunities, and great conversations.</p>
+    <div class="social-links" id="social-list"></div>
+    <button class="add-btn" style="max-width:300px;margin:1rem auto 0;" onclick="openAddSocial()">+ Add Social Link</button>
+    <div class="footer-copy">© <span id="copy-year"></span> <span id="copy-name">Sajal Sharma</span>. Crafted with ❤️ and lots of ☕</div>
+  </div>
+</footer>
+
+<!-- ═══ MODALS ═══ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+// ─── DATA STORE ───
+let data = {
+  profile:{
+    name:"Sajal Sharma",avatar:"🧑‍💻",role:"Cyber Security Student",
+    bio:"Passionate Cybersecurity student with a solid foundation in network security and ethical hacking. Experienced in building home labs, conducting vulnerability assessments using Nmap and Metasploit, and analyzing traffic with Wireshark. Eager to leverage hands-on skills in threat detection and incident response to protect digital infrastructure. Actively seeking a [SOC Analyst/Junior Security] role.",
+    location:"Greater Noida, UP",email:"sharmasajal199@gmail.com",tagline:"Building the future, one commit at a time.",
+    stats:{projects:"2",exp:"Ready to get",pubs:"Working",certs:"3"}
+  },
+  experiences:[
+    // {id:1,year:"2022 — Present",title:"Senior ML Engineer",org:"TechCorp AI",desc:"Leading the development of production-grade NLP pipelines serving 10M+ users daily. Reduced inference latency by 40%."},
+    // {id:2,year:"2020 — 2022",title:"Full-Stack Developer",org:"StartupXYZ",desc:"Built and scaled a real-time collaboration platform from 0 to 50k users. Led a team of 5 engineers."},
+    // {id:3,year:"2019 — 2020",title:"Research Intern",org:"State University AI Lab",desc:"Published 2 papers on transformer architectures for low-resource NLP tasks."}
+  ],
+  education:[
+    {id:1,year:"2022 — 2025",title:"Bachelor's in Computer Application",org:"Mangalayatan Univerfsity",desc:"Specialization Computer Application GPA: 9.12/10.0"},
+    {id:2,year:"2025 — 2027",title:"Masters in Computer Application",org:"Galgotias University",desc:"Specialization in Cyber Security GPA: 8.85/10.0"}
+  ],
+  skills:[
+    {id:1,name:"Git",level:90},
+    {id:2,name:"SQL",level:88},
+    {id:3,name:"AWS",level:88},
+    {id:4,name:"Metasploit",level:40},
+    {id:5,name:"Doscker / Kubernetes",level:60},
+    // {id:6,name:"Docker / Kubernetes",level:75}
+  ],
+  projects:[
+    {id:1,emoji:"🤖",title:"Librry Management System",desc:"An open-source Library Management System Which holds all the details about books and students.",tags:["HTML","CSS", "JS", "PHP"],c1:"#1e1b4b",c2:"#2d1b69",github:"https://github.com/sajal703/Library-Management-System"},
+    {id:2,emoji:"📊",title:"Caesar Cipher Algorithm",desc:" encryption technique that shifts each letter in the plaintext by a fixed number of positions.",tags:["Python"],c1:"#0c2340",c2:"#164e63",tagType:"cyan",github:"https://github.com/sajal703/Caesar-Cipher-Algorithm"},
+    // {id:3,emoji:"🔐",title:"SecureAuth",desc:"Zero-trust authentication system using behavioral biometrics and ML-based anomaly detection.",tags:["Rust","WebAssembly","ML"],c1:"#1a0f2e",c2:"#3b0764",tagType:"amber",link:"#",github:"#"}
+  ],
+  publications:[
+    // {id:1,year:"2024",title:"Efficient Transformers for Low-Resource NLP: A Survey",authors:"Morgan, A., Chen, L., Park, S.",venue:"ACL 2024, Bangkok, Thailand",badges:["Best Paper Award","Oral Presentation"]},
+    // {id:2,year:"2023",title:"Federated Learning with Differential Privacy in Healthcare Applications",authors:"Morgan, A., Williams, R.",venue:"NeurIPS 2023, New Orleans, LA",badges:["Spotlight Paper"]},
+    // {id:3,year:"2022",title:"Multi-Modal Sentiment Analysis Using Vision-Language Models",authors:"Morgan, A., Liu, Y., Zhao, K.",venue:"EMNLP 2022, Abu Dhabi",badges:["Published"]}
+  ],
+  certifications:[
+    {id:1,icon:"☁️",name:"Mastercard Cybersecurity virtual experience program on Forage",issuer:"Forage",date:"JAn 2025",verified:true,linkedinUrl:"https://www.linkedin.com/posts/sajal-sharma-8b7243214_forage-certificate-activity-7285648894024208385-2YDL?utm_source=share&utm_medium=member_desktop&rcm=ACoAADYj9UsB-fH8IoZEeE_CkP-nozGPx1MNO3k"},
+    {id:2,icon:"🧠",name:"Accenture Nordics Consultant Job Simulation",issuer:"Forage",date:"Jan 2025",verified:true,linkedinUrl:"https://www.linkedin.com/posts/sajal-sharma-8b7243214_forage-certificate-activity-7285652599792377856--vCH?utm_source=share&utm_medium=member_desktop&rcm=ACoAADYj9UsB-fH8IoZEeE_CkP-nozGPx1MNO3k"},
+    {id:3,icon:"🔒",name:"Database Managemet Essentials",issuer:"Coursera",date:"Oct 2025",verified:true,linkedinUrl:"https://www.linkedin.com/posts/sajal-sharma-8b7243214_coursera-database-databasemanagement-activity-7382655166409367552-YO3K?utm_source=share&utm_medium=member_desktop&rcm=ACoAADYj9UsB-fH8IoZEeE_CkP-nozGPx1MNO3k"},
+    // {id:4,icon:"📊",name:"Professional Data Engineer",issuer:"Google Cloud",date:"Jan 2022",credId:"GCP-PDE-ALEX-2022",verified:true,linkedinUrl:""}
+  ],
+  socials:[
+    {id:1,icon:"🐙",label:"GitHub",url:"https://github.com/sajal703"},
+    {id:2,icon:"💼",label:"LinkedIn",url:"https://www.linkedin.com/in/sajal-sharma-8b7243214/"},
+    {id:3,icon:"🐦",label:"Twitter",url:"https://x.com/sh55626233"},
+  ]
+};
+
+// ─── RENDER ───
+function render(){
+  renderProfile();
+  renderExp();renderEdu();renderSkills();
+  renderProjects();renderPubs();renderCerts();renderSocials();
+}
+
+function renderProfile(){
+  const p=data.profile;
+  document.getElementById('nav-name').textContent=p.name;
+  document.getElementById('display-name').textContent=p.name;
+  document.getElementById('display-name2').textContent=p.name;
+  document.getElementById('display-role').textContent=p.role;
+  document.getElementById('display-bio').textContent=p.bio;
+  document.getElementById('display-location').textContent=p.location;
+  document.getElementById('display-email').textContent=p.email;
+  document.getElementById('display-avatar').textContent=p.avatar;
+  document.getElementById('display-tagline').textContent=p.tagline;
+  document.getElementById('stat-projects').textContent=p.stats.projects;
+  document.getElementById('stat-exp').textContent=p.stats.exp;
+  document.getElementById('stat-pubs').textContent=p.stats.pubs;
+  document.getElementById('stat-certs').textContent=p.stats.certs;
+  document.getElementById('copy-name').textContent=p.name;
+  document.getElementById('copy-year').textContent=new Date().getFullYear();
+}
+
+function renderExp(){
+  document.getElementById('exp-list').innerHTML=data.experiences.map((e,i)=>`
+    <div class="tl-item" style="position:relative;">
+      <div class="tl-year">${e.year}</div>
+      <div class="tl-title">${e.title}</div>
+      <div class="tl-org">${e.org}</div>
+      <div class="tl-desc">${e.desc}</div>
+      <button class="edit-item-btn" onclick="openEditExp(${i})">✏️ Edit</button>
+    </div>`).join('');}
+
+function renderEdu(){
+  document.getElementById('edu-list').innerHTML=data.education.map((e,i)=>`
+    <div class="tl-item" style="position:relative;border-left-color:var(--accent2);">
+      <div class="tl-year">${e.year}</div>
+      <div class="tl-title">${e.title}</div>
+      <div class="tl-org">${e.org}</div>
+      <div class="tl-desc">${e.desc}</div>
+      <button class="edit-item-btn" onclick="openEditEdu(${i})">✏️ Edit</button>
+    </div>`).join('');}
+
+function renderSkills(){
+  document.getElementById('skills-list').innerHTML=data.skills.map((s,i)=>`
+    <div class="skill-item">
+      <div class="skill-header">
+        <span>${s.name}</span>
+        <span style="color:var(--accent2);">${s.level}%</span>
+      </div>
+      <div class="skill-bar" onclick="openEditSkill(${i})" style="cursor:pointer;">
+        <div class="skill-fill" style="width:${s.level}%"></div>
+      </div>
+    </div>`).join('');}
+
+function renderProjects(){
+  document.getElementById('proj-list').innerHTML=data.projects.map((p,i)=>`
+    <div class="proj-card" style="position:relative;">
+      <div class="proj-thumb">
+        <div class="bg" style="--c1:${p.c1};--c2:${p.c2};"></div>
+        <div class="proj-emoji">${p.emoji}</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">${p.title}</div>
+        <div class="proj-desc">${p.desc}</div>
+        <div class="proj-tags">${p.tags.map(t=>`<span class="tag ${p.tagType||''}">${t}</span>`).join('')}</div>
+        <div class="proj-links">
+          <a href="${p.link}" class="proj-link">🔗 Live</a>
+          <a href="${p.github}" class="proj-link">⭐ GitHub</a>
+        </div>
+      </div>
+      <button class="edit-item-btn" onclick="openEditProj(${i})">✏️ Edit</button>
+    </div>`).join('');}
+
+function renderPubs(){
+  document.getElementById('pub-list').innerHTML=data.publications.map((p,i)=>`
+    <div class="pub-item" style="position:relative;">
+      <div class="pub-year-badge">${p.year}</div>
+      <div>
+        <div class="pub-title">${p.title}</div>
+        <div class="pub-authors">${p.authors}</div>
+        <div class="pub-venue">📍 ${p.venue}</div>
+        <div class="pub-badges">${p.badges.map(b=>`<span class="badge ${b==='Published'?'green':''}">${b}</span>`).join('')}</div>
+      </div>
+      <button class="edit-item-btn" onclick="openEditPub(${i})">✏️ Edit</button>
+    </div>`).join('');}
+
+function renderCerts(){
+  document.getElementById('cert-list').innerHTML=data.certifications.map((c,i)=>`
+    <div class="cert-card" style="position:relative;">
+      <div class="cert-icon">${c.icon}</div>
+      <div>
+        <div class="cert-name">${c.name}</div>
+        <div class="cert-issuer">${c.issuer}</div>
+        <div class="cert-date">Issued: ${c.date}</div>
+        <div class="cert-id">ID: ${c.credId}</div>
+        ${c.linkedinUrl?`<a href="${c.linkedinUrl}" target="_blank" class="cert-verify">🔗 LinkedIn Certificate</a>`:''}
+      </div>
+      ${c.verified?'<div class="verified-badge">✅ Verified</div>':''}
+      <button class="edit-item-btn" onclick="openEditCert(${i})">✏️ Edit</button>
+    </div>`).join('');}
+
+function renderSocials(){
+  document.getElementById('social-list').innerHTML=data.socials.map((s,i)=>`
+    <a href="${s.url}" class="social-link" target="_blank">${s.icon} ${s.label}
+      <button onclick="event.preventDefault();openEditSocial(${i})" style="margin-left:.4rem;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;" title="Edit">✏️</button>
+    </a>`).join('');}
+
+// ─── MODAL ───
+function openModal(html){
+  document.getElementById('modal-content').innerHTML=html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// ─── PROFILE EDIT ───
+function openProfileEdit(){
+  const p=data.profile;
+  openModal(`
+    <div class="modal-header"><div class="modal-title">✏️ Edit Profile</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="f-name" value="${p.name}"></div>
+      <div class="form-group"><label class="form-label">Avatar Emoji</label><input class="form-input" id="f-avatar" value="${p.avatar}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Role / Title</label><input class="form-input" id="f-role" value="${p.role}"></div>
+    <div class="form-group"><label class="form-label">Bio</label><textarea class="form-textarea" id="f-bio">${p.bio}</textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="f-loc" value="${p.location}"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" value="${p.email}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Card Tagline</label><input class="form-input" id="f-tagline" value="${p.tagline}"></div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin:1rem 0 .5rem;color:var(--muted);">Stats</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Projects</label><input class="form-input" id="f-sp" value="${p.stats.projects}"></div>
+      <div class="form-group"><label class="form-label">Experience</label><input class="form-input" id="f-se" value="${p.stats.exp}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Publications</label><input class="form-input" id="f-spub" value="${p.stats.pubs}"></div>
+      <div class="form-group"><label class="form-label">Certifications</label><input class="form-input" id="f-sc" value="${p.stats.certs}"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProfile()">Save Changes</button>
+    </div>`);
+}
+function saveProfile(){
+  data.profile={
+    name:v('f-name'),avatar:v('f-avatar'),role:v('f-role'),bio:v('f-bio'),
+    location:v('f-loc'),email:v('f-email'),tagline:v('f-tagline'),
+    stats:{projects:v('f-sp'),exp:v('f-se'),pubs:v('f-spub'),certs:v('f-sc')}
+  };
+  renderProfile();closeModal();toast('Profile updated!');
+}
+
+// ─── EXPERIENCE ───
+function openAddExp(){openExpModal({year:'',title:'',org:'',desc:''},-1,'exp');}
+function openEditExp(i){openExpModal(data.experiences[i],i,'exp');}
+function openExpModal(e,idx,type){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} ${type==='exp'?'Experience':'Education'}</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Year Range</label><input class="form-input" id="f-year" value="${e.year}" placeholder="2022 — Present"></div>
+      <div class="form-group"><label class="form-label">Title / Degree</label><input class="form-input" id="f-title" value="${e.title}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">${type==='exp'?'Company':'Institution'}</label><input class="form-input" id="f-org" value="${e.org}"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="f-desc">${e.desc}</textarea></div>
+    ${idx>=0?`<div style="margin-top:.5rem;"><button onclick="del('${type}',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button></div>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveTimelineItem('${type}',${idx})">Save</button>
+    </div>`);
+}
+function openAddEdu(){openExpModal({year:'',title:'',org:'',desc:''},-1,'edu');}
+function openEditEdu(i){openExpModal(data.education[i],i,'edu');}
+function saveTimelineItem(type,idx){
+  const item={id:Date.now(),year:v('f-year'),title:v('f-title'),org:v('f-org'),desc:v('f-desc')};
+  const arr=type==='exp'?data.experiences:data.education;
+  if(idx<0)arr.unshift(item);else arr[idx]=item;
+  type==='exp'?renderExp():renderEdu();closeModal();toast('Saved!');
+}
+function del(type,i){
+  if(type==='exp')data.experiences.splice(i,1);
+  else if(type==='edu')data.education.splice(i,1);
+  else if(type==='skill')data.skills.splice(i,1);
+  else if(type==='proj')data.projects.splice(i,1);
+  else if(type==='pub')data.publications.splice(i,1);
+  else if(type==='cert')data.certifications.splice(i,1);
+  else if(type==='social')data.socials.splice(i,1);
+  render();closeModal();toast('Deleted');
+}
+
+// ─── SKILLS ───
+function openAddSkill(){openSkillModal({name:'',level:80},-1);}
+function openEditSkill(i){openSkillModal(data.skills[i],i);}
+function openSkillModal(s,idx){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} Skill</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-group"><label class="form-label">Skill Name</label><input class="form-input" id="f-sname" value="${s.name}" placeholder="e.g. Python / ML"></div>
+    <div class="form-group"><label class="form-label">Proficiency Level (0–100)</label><input class="form-input" id="f-slevel" type="number" min="0" max="100" value="${s.level}"></div>
+    ${idx>=0?`<button onclick="del('skill',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSkill(${idx})">Save</button>
+    </div>`);
+}
+function saveSkill(idx){
+  const item={id:Date.now(),name:v('f-sname'),level:parseInt(v('f-slevel'))||0};
+  if(idx<0)data.skills.push(item);else data.skills[idx]=item;
+  renderSkills();closeModal();toast('Saved!');
+}
+
+// ─── PROJECTS ───
+function openAddProj(){openProjModal({emoji:'🚀',title:'',desc:'',tags:'',c1:'#1e1b4b',c2:'#164e63',link:'#',github:'#',tagType:''},-1);}
+function openEditProj(i){const p=data.projects[i];openProjModal({...p,tags:p.tags.join(', ')},i);}
+function openProjModal(p,idx){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} Project</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Emoji Icon</label><input class="form-input" id="f-emoji" value="${p.emoji}"></div>
+      <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="f-ptitle" value="${p.title}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="f-pdesc">${p.desc}</textarea></div>
+    <div class="form-group"><label class="form-label">Tags (comma-separated)</label><input class="form-input" id="f-ptags" value="${p.tags}" placeholder="Python, TensorFlow, FastAPI"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Live URL</label><input class="form-input" id="f-plink" value="${p.link}"></div>
+      <div class="form-group"><label class="form-label">GitHub URL</label><input class="form-input" id="f-pgithub" value="${p.github}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Color 1 (hex)</label><input class="form-input" type="color" id="f-pc1" value="${p.c1}"></div>
+      <div class="form-group"><label class="form-label">Color 2 (hex)</label><input class="form-input" type="color" id="f-pc2" value="${p.c2}"></div>
+    </div>
+    ${idx>=0?`<button onclick="del('proj',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProj(${idx})">Save</button>
+    </div>`);
+}
+function saveProj(idx){
+  const item={id:Date.now(),emoji:v('f-emoji'),title:v('f-ptitle'),desc:v('f-pdesc'),
+    tags:v('f-ptags').split(',').map(t=>t.trim()).filter(Boolean),
+    link:v('f-plink'),github:v('f-pgithub'),c1:v('f-pc1'),c2:v('f-pc2'),tagType:''};
+  if(idx<0)data.projects.push(item);else data.projects[idx]=item;
+  renderProjects();closeModal();toast('Saved!');
+}
+
+// ─── PUBLICATIONS ───
+function openAddPub(){openPubModal({year:'',title:'',authors:'',venue:'',badges:''},-1);}
+function openEditPub(i){const p=data.publications[i];openPubModal({...p,badges:p.badges.join(', ')},i);}
+function openPubModal(p,idx){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} Publication</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Year</label><input class="form-input" id="f-pyear" value="${p.year}" placeholder="2024"></div>
+      <div class="form-group"><label class="form-label">Badges (comma-separated)</label><input class="form-input" id="f-pbadges" value="${p.badges}" placeholder="Best Paper, Oral"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="f-pubttitle" value="${p.title}"></div>
+    <div class="form-group"><label class="form-label">Authors</label><input class="form-input" id="f-pauthors" value="${p.authors}" placeholder="Morgan, A., Chen, L."></div>
+    <div class="form-group"><label class="form-label">Venue / Conference</label><input class="form-input" id="f-pvenue" value="${p.venue}" placeholder="ACL 2024, Bangkok"></div>
+    ${idx>=0?`<button onclick="del('pub',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="savePub(${idx})">Save</button>
+    </div>`);
+}
+function savePub(idx){
+  const item={id:Date.now(),year:v('f-pyear'),title:v('f-pubttitle'),authors:v('f-pauthors'),
+    venue:v('f-pvenue'),badges:v('f-pbadges').split(',').map(b=>b.trim()).filter(Boolean)};
+  if(idx<0)data.publications.unshift(item);else data.publications[idx]=item;
+  renderPubs();closeModal();toast('Saved!');
+}
+
+// ─── CERTIFICATIONS ───
+function openAddCert(){openCertModal({icon:'🏆',name:'',issuer:'',date:'',credId:'',verified:false,linkedinUrl:'https://www.linkedin.com/posts/sajal-sharma-8b7243214_forage-certificate-activity-7285648894024208385-2YDL?utm_source=share&utm_medium=member_desktop&rcm=ACoAADYj9UsB-fH8IoZEeE_CkP-nozGPx1MNO3k'},-1);}
+function openEditCert(i){openCertModal(data.certifications[i],i);}
+function openCertModal(c,idx){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} Certification</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Icon Emoji</label><input class="form-input" id="f-cicon" value="${c.icon}"></div>
+      <div class="form-group"><label class="form-label">Certification Name</label><input class="form-input" id="f-cname" value="${c.name}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Issuing Body</label><input class="form-input" id="f-cissuer" value="${c.issuer}"></div>
+      <div class="form-group"><label class="form-label">Issue Date</label><input class="form-input" id="f-cdate" value="${c.date}" placeholder="Nov 2023"></div>
+    </div>
+    <div class="form-group"><label class="form-label">LinkedIn Certificate URL</label><input class="form-input" id="f-clinkedin" value="${c.linkedinUrl||''}" placeholder="https://www.linkedin.com/learning/..."></div>
+    <div class="form-group" style="display:flex;align-items:center;gap:.6rem;">
+      <input type="checkbox" id="f-cverified" ${c.verified?'checked':''} style="width:16px;height:16px;accent-color:var(--accent);">
+      <label for="f-cverified" class="form-label" style="margin:0;">Mark as Verified</label>
+    </div>
+    ${idx>=0?`<button onclick="del('cert',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveCert(${idx})">Save</button>
+    </div>`);
+}
+function saveCert(idx){
+  const item={id:Date.now(),icon:v('f-cicon'),name:v('f-cname'),issuer:v('f-cissuer'),
+    date:v('f-cdate'),verified:document.getElementById('f-cverified').checked,linkedinUrl:v('f-clinkedin')};
+  if(idx<0)data.certifications.push(item);else data.certifications[idx]=item;
+  renderCerts();closeModal();toast('Saved!');
+}
+
+// ─── SOCIALS ───
+function openAddSocial(){openSocialModal({icon:'🔗',label:'',url:''},-1);}
+function openEditSocial(i){openSocialModal(data.socials[i],i);}
+function openSocialModal(s,idx){
+  openModal(`
+    <div class="modal-header"><div class="modal-title">${idx<0?'➕':'✏️'} Social Link</div><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Icon Emoji</label><input class="form-input" id="f-sicon" value="${s.icon}"></div>
+      <div class="form-group"><label class="form-label">Label</label><input class="form-input" id="f-slabel" value="${s.label}" placeholder="GitHub"></div>
+    </div>
+    <div class="form-group"><label class="form-label">URL</label><input class="form-input" id="f-surl" value="${s.url}" placeholder="https://github.com/username"></div>
+    ${idx>=0?`<button onclick="del('social',${idx})" style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.25);color:#ef4444;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;">🗑 Delete</button>`:''}
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSocial(${idx})">Save</button>
+    </div>`);
+}
+function saveSocial(idx){
+  const item={id:Date.now(),icon:v('f-sicon'),label:v('f-slabel'),url:v('f-surl')};
+  if(idx<0)data.socials.push(item);else data.socials[idx]=item;
+  renderSocials();closeModal();toast('Saved!');
+}
+
+// ─── UTILS ───
+function v(id){return document.getElementById(id)?.value||'';}
+function toast(msg){
+  const el=document.createElement('div');
+  el.className='toast';el.textContent=msg;document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2500);
+}
+
+// ─── SCROLL ANIMATION ───
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// ─── INIT ───
+render();
+</script>
+</body>
+</html>

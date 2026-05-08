@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portfolio | AgriForecast ML</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{
+  colors:{"primary":"#012d1d","primary-container":"#1b4332","on-primary":"#ffffff","on-primary-container":"#86af99",
+    "secondary":"#1f6d1a","secondary-container":"#a4f792","on-secondary":"#ffffff",
+    "surface":"#f8f9fa","surface-container":"#edeeef","surface-container-low":"#f3f4f5","surface-container-lowest":"#ffffff",
+    "on-surface":"#191c1d","on-surface-variant":"#414844","outline":"#717973","outline-variant":"#c1c8c2",
+    "error":"#ba1a1a","error-container":"#ffdad6","secondary-fixed-dim":"#89da79","background":"#f8f9fa"},
+  borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},
+  spacing:{"sm":"8px","xl":"40px","md":"16px","xs":"4px","lg":"24px","gutter":"20px"},
+  fontFamily:{"label-caps":["Inter"],"body-md":["Inter"],"headline-md":["Manrope"],"data-mono":["Inter"]},
+  fontSize:{"label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],
+    "body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],
+    "data-mono":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"500"}]}
+}}}
+</script>
+<style>
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.nav-active{background:#012d1d;color:#fff;border-radius:6px}
+.card-hover:hover{box-shadow:0 4px 20px rgba(1,45,29,.12);transform:translateY(-1px);transition:all .2s}
+</style>
+
+<style>
+.dark{
+  background:#0b120e;
+  color:#e2ede6;
+}
+
+.dark body{
+  background:#0b120e !important;
+  color:#e2ede6 !important;
+}
+
+.dark aside,
+.dark nav,
+.dark .bg-white{
+  background:#162019 !important;
+}
+
+.dark .bg-background{
+  background:#0b120e !important;
+}
+
+.dark .text-on-surface,
+.dark .text-gray-600,
+.dark .text-gray-400{
+  color:#e2ede6 !important;
+}
+
+.dark .text-on-surface-variant{
+  color:#8aaa94 !important;
+}
+
+.dark .text-primary{
+  color:#4ade80 !important;
+}
+
+.dark .text-secondary{
+  color:#86efac !important;
+}
+
+.dark .border-outline-variant,
+.dark .border-r,
+.dark .border-b,
+.dark .border-t{
+  border-color:#243328 !important;
+}
+
+.dark thead{
+  background:#1a2b1e !important;
+}
+
+.dark tbody tr:hover{
+  background:#1e3025 !important;
+}
+
+.dark .bg-surface-container,
+.dark .bg-surface-container-low,
+.dark .bg-surface-container-lowest{
+  background:#1a2b1e !important;
+}
+
+.dark button:hover,
+.dark a:hover{
+  background:#1e3025;
+}
+
+.dark input{
+  background:#1a2b1e;
+  color:#e2ede6;
+  border-color:#243328;
+}
+
+.dark .nav-active{
+  background:#166534 !important;
+  color:white !important;
+}
+</style>
+
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+
+<aside class="hidden md:flex flex-col w-64 h-screen fixed left-0 top-0 p-4 gap-2 bg-white border-r border-outline-variant z-50">
+  <div class="mb-6 px-2 flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-3xl">agri</span>
+    <div>
+      <h1 class="text-base font-bold text-primary font-headline-md leading-tight">AgriForecast ML</h1>
+      <p class="text-[10px] text-on-surface-variant font-label-caps tracking-widest">ML-DRIVEN INSIGHTS</p>
+    </div>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-surface-container rounded-sm text-sm font-medium transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined text-xl">dashboard</span>Dashboard</a>
+    <a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-surface-container rounded-sm text-sm font-medium transition-all" href="predictor.html">
+      <span class="material-symbols-outlined text-xl">query_stats</span>Predictor</a>
+    <a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-surface-container rounded-sm text-sm font-medium transition-all" href="analytics.html">
+      <span class="material-symbols-outlined text-xl">analytics</span>Analytics</a>
+    <a class="nav-active flex items-center gap-3 px-3 py-2.5 text-sm font-medium" href="portfolio.html">
+      <span class="material-symbols-outlined text-xl">inventory_2</span>Portfolio</a>
+    <a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-surface-container rounded-sm text-sm font-medium transition-all" href="history.html">
+      <span class="material-symbols-outlined text-xl">history</span>History</a>
+  </nav>
+</aside>
+
+<main class="md:ml-64 p-6 pb-24 md:pb-6">
+  <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+    <div>
+      <h2 class="font-headline-md text-2xl text-primary">Crop Portfolio</h2>
+      <p class="text-sm text-on-surface-variant">ML-powered PnL tracking with 90-day price forecasts</p>
+    </div>
+    <div class="flex items-center gap-2">
+
+      <button onclick="toggleDark()" class="p-2 rounded-lg border border-outline-variant hover:bg-surface-container transition-all">
+        <span class="material-symbols-outlined text-xl" id="themeIcon">dark_mode</span>
+      </button>
+
+      <button onclick="loadPortfolio()" class="p-2 rounded-lg border border-outline-variant hover:bg-surface-container transition-all">
+        <span class="material-symbols-outlined text-xl">refresh</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white border border-outline-variant rounded-xl p-4">
+      <div class="text-label-caps text-[10px] text-on-surface-variant mb-1">TOTAL VALUE</div>
+      <div class="font-headline-md text-2xl text-primary" id="total-value">—</div>
+    </div>
+    <div class="bg-white border border-outline-variant rounded-xl p-4">
+      <div class="text-label-caps text-[10px] text-on-surface-variant mb-1">TOTAL P&L</div>
+      <div class="font-headline-md text-2xl" id="total-pnl">—</div>
+    </div>
+    <div class="bg-white border border-outline-variant rounded-xl p-4">
+      <div class="text-label-caps text-[10px] text-on-surface-variant mb-1">P&L %</div>
+      <div class="font-headline-md text-2xl" id="total-pnl-pct">—</div>
+    </div>
+    <div class="bg-white border border-outline-variant rounded-xl p-4">
+      <div class="text-label-caps text-[10px] text-on-surface-variant mb-1">HOLDINGS</div>
+      <div class="font-headline-md text-2xl text-primary" id="num-holdings">—</div>
+    </div>
+  </div>
+
+  <!-- Portfolio Donut Chart -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white border border-outline-variant rounded-xl p-6">
+      <h3 class="font-headline-md text-base font-bold text-primary mb-4">Portfolio Allocation</h3>
+      <div class="relative" style="height:220px">
+        <canvas id="allocationChart"></canvas>
+      </div>
+    </div>
+    <div class="lg:col-span-2 bg-white border border-outline-variant rounded-xl p-6">
+      <h3 class="font-headline-md text-base font-bold text-primary mb-4">90-Day ML Forecast by Holding</h3>
+      <canvas id="forecastBarsChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <!-- Holdings Table -->
+  <div class="bg-white border border-outline-variant rounded-xl overflow-hidden mb-6">
+    <div class="p-4 border-b border-outline-variant flex items-center justify-between">
+      <h3 class="font-headline-md text-base font-bold text-primary">Holdings</h3>
+      <a href="predictor.html" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+        ADD PREDICTION <span class="material-symbols-outlined text-sm">add</span>
+      </a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-surface-container-low text-label-caps text-[10px] border-b border-outline-variant">
+          <tr>
+            <th class="px-4 py-3">CROP / REGION</th>
+            <th class="px-4 py-3 text-right">QTY (Q)</th>
+            <th class="px-4 py-3 text-right">BUY PRICE</th>
+            <th class="px-4 py-3 text-right">CURRENT</th>
+            <th class="px-4 py-3 text-right">P&L</th>
+            <th class="px-4 py-3 text-right">90D FORECAST</th>
+            <th class="px-4 py-3 text-right hidden lg:table-cell">CONFIDENCE</th>
+            <th class="px-4 py-3 text-right">ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="holdings-table" class="divide-y divide-outline-variant font-data-mono"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Forecast Report Banner -->
+  <div class="bg-primary-container rounded-xl p-6 relative overflow-hidden">
+    <div class="relative z-10 max-w-xl">
+      <h3 class="font-headline-md text-white text-lg mb-2">Yield Forecast Report</h3>
+      <p class="text-on-primary-container text-sm mb-4">Our neural network suggests 15% volatility increase in grain markets due to projected precipitation deficits. Adjust your portfolio accordingly.</p>
+      <div class="flex gap-3">
+        <a href="analytics.html" class="bg-secondary text-white px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition-all">GENERATE FULL REPORT</a>
+        <a href="predictor.html" class="border border-white/40 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-white/10 transition-all">RUN PREDICTION</a>
+      </div>
+    </div>
+    <div class="absolute right-4 top-0 bottom-0 flex items-center opacity-10">
+      <span class="material-symbols-outlined text-[180px] text-white">neurology</span>
+    </div>
+  </div>
+</main>
+
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 bg-white border-t border-outline-variant">
+  <a href="dashboard.html" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined">dashboard</span>Home</a>
+  <a href="predictor.html" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined">query_stats</span>Predict</a>
+  <a href="analytics.html" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined">analytics</span>Analytics</a>
+  <a href="portfolio.html" class="flex flex-col items-center text-primary text-[10px] font-bold"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">inventory_2</span>Portfolio</a>
+  <a href="history.html" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined">history</span>History</a>
+</nav>
+
+<script>
+const API = 'http://localhost:5000';
+let allocChart=null, forecastBarsChart=null;
+
+async function loadPortfolio() {
+  const res = await fetch(`${API}/api/portfolio`);
+  const data = await res.json();
+  const s = data.summary;
+
+  document.getElementById('total-value').textContent = '₹'+s.total_value_inr.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  const pnlEl = document.getElementById('total-pnl');
+  pnlEl.textContent = (s.total_pnl_inr>=0?'+':'')+'₹'+Math.abs(s.total_pnl_inr).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  pnlEl.className = 'font-headline-md text-2xl ' + (s.total_pnl_inr>=0 ? 'text-secondary':'text-error');
+  const pnlPctEl = document.getElementById('total-pnl-pct');
+  pnlPctEl.textContent = (s.total_pnl_pct>=0?'+':'')+s.total_pnl_pct.toFixed(2)+'%';
+  pnlPctEl.className = 'font-headline-md text-2xl ' + (s.total_pnl_pct>=0 ? 'text-secondary':'text-error');
+  document.getElementById('num-holdings').textContent = s.num_holdings;
+
+  const portfolio = data.portfolio;
+  const colors = ['#012d1d','#1f6d1a','#3d8b37','#6aab5f','#95ca8a','#c1ecd4'];
+
+  // Allocation donut
+  if (allocChart) allocChart.destroy();
+  allocChart = new Chart(document.getElementById('allocationChart').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:portfolio.map(p=>p.crop),
+      datasets:[{data:portfolio.map(p=>p.total_value_inr),backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8}}}}
+  });
+
+  // 90D forecast bars
+  if (forecastBarsChart) forecastBarsChart.destroy();
+  forecastBarsChart = new Chart(document.getElementById('forecastBarsChart').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:portfolio.map(p=>p.crop),
+      datasets:[
+        {label:'Current (₹)',data:portfolio.map(p=>p.current_price_inr),backgroundColor:'rgba(1,45,29,0.75)',borderRadius:4},
+        {label:'90D Forecast (₹)',data:portfolio.map(p=>p.predicted_90d_inr),backgroundColor:'rgba(31,109,26,0.6)',borderRadius:4}
+      ]
+    },
+    options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}}},scales:{
+      y:{grid:{color:'#e7e8e9'},ticks:{callback:v=>'₹'+v.toFixed(0)}},x:{grid:{display:false}}
+    }}
+  });
+
+  // Holdings Table
+  document.getElementById('holdings-table').innerHTML = portfolio.map(p=>{
+    const pnlColor = p.pnl_pct>=0 ? 'text-secondary':'text-error';
+    const forecastColor = p.prediction_90d_change>=0 ? 'text-secondary':'text-error';
+    const forecastArrow = p.prediction_90d_change>=0 ? 'trending_up':'trending_down';
+    const confW = p.confidence;
+    return `
+    <tr class="hover:bg-surface-container transition-colors card-hover">
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-lg">${p.icon}</span>
+          <div>
+            <div class="font-medium">${p.crop}</div>
+            <div class="text-[10px] text-on-surface-variant">${p.region}</div>
+          </div>
+          ${p.is_peak_season ? '<span class="ml-1 px-1.5 py-0.5 bg-secondary-container text-secondary text-[9px] font-label-caps rounded">PEAK</span>':''}
+        </div>
+      </td>
+      <td class="px-4 py-3 text-right">${p.quantity_quintals}</td>
+      <td class="px-4 py-3 text-right">₹${p.buy_price_inr.toFixed(2)}</td>
+      <td class="px-4 py-3 text-right font-bold text-primary">₹${p.current_price_inr.toFixed(2)}</td>
+      <td class="px-4 py-3 text-right ${pnlColor} font-bold">
+        ${p.pnl_pct>=0?'+':''}${p.pnl_pct.toFixed(1)}%<br>
+        <span class="text-[10px]">${p.pnl_inr>=0?'+':''}₹${p.pnl_inr.toFixed(0)}</span>
+      </td>
+      <td class="px-4 py-3 text-right">
+        <div class="${forecastColor} flex items-center justify-end gap-1 text-sm font-bold">
+          <span class="material-symbols-outlined text-sm">${forecastArrow}</span>
+          ₹${p.predicted_90d_inr.toFixed(2)}
+        </div>
+        <div class="text-[10px] text-on-surface-variant">${p.prediction_90d_change>=0?'+':''}${p.prediction_90d_change.toFixed(1)}%</div>
+      </td>
+      <td class="px-4 py-3 hidden lg:table-cell">
+        <div class="w-full bg-surface-container rounded-full h-1.5 mt-1">
+          <div class="h-1.5 rounded-full bg-secondary" style="width:${confW}%"></div>
+        </div>
+        <div class="text-[10px] text-on-surface-variant text-right">${confW}%</div>
+      </td>
+      <td class="px-4 py-3 text-right">
+        <a href="predictor.html?crop=${p.crop}&region=${p.region}" class="text-primary text-xs font-bold hover:underline">FORECAST</a>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+
+function applyTheme(dark){
+  document.documentElement.classList.toggle('dark', dark);
+
+  const icon = document.getElementById('themeIcon');
+
+  if(icon){
+    icon.textContent = dark ? 'light_mode' : 'dark_mode';
+  }
+
+  localStorage.setItem('agri_theme', dark ? 'dark' : 'light');
+}
+
+function toggleDark(){
+  applyTheme(!document.documentElement.classList.contains('dark'));
+}
+
+applyTheme(localStorage.getItem('agri_theme') === 'dark');
+
+
+loadPortfolio();
+</script>
+</body>
+</html>

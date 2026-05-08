@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Dashboard | AgriForecast ML</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--sb:#fff;--cb:#fff;--bg:#f0f4f1;--br:#d1d9d4;--tx:#191c1d;--tm:#5a6b62;--pr:#012d1d;--sc:#1f6d1a;--ac:#a4f792;--ib:#f3f4f5;--cg:#e2e8e4}
+.dark{--sb:#0f1a14;--cb:#162019;--bg:#0b120e;--br:#243328;--tx:#e2ede6;--tm:#8aaa94;--pr:#4ade80;--sc:#86efac;--ac:#166534;--ib:#1a2b1e;--cg:#1e3025}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--tx);font-family:Inter,sans-serif;margin:0}
+.sidebar{background:var(--sb);border-color:var(--br)}.card{background:var(--cb);border-color:var(--br)}
+.nl{color:var(--tm);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;text-decoration:none;transition:background .15s}
+.nl:hover{background:var(--ib)}.na{background:#012d1d!important;color:#fff!important;border-radius:8px}
+.dark .na{background:#166534!important}.ms{font-family:'Material Symbols Outlined';font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle}
+.tbtn{background:var(--ib);border:1px solid var(--br);color:var(--tx);border-radius:8px;padding:7px 11px;cursor:pointer;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600}
+select{background:var(--ib);border:1px solid var(--br);color:var(--tx);border-radius:8px;padding:7px 12px;font-size:13px;outline:none}
+.pulse{animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--br);border-radius:3px}
+tr:hover td{background:var(--ib)}
+@media (min-width:768px){
+  main{
+    width:calc(100% - 256px) !important;
+    margin-left:256px !important;
+  }
+}
+</style>
+</head>
+<body>
+<div style="display:flex;min-height:100vh">
+<aside class="sidebar hidden md:flex flex-col border-r z-50" style="width:256px;height:100vh;position:fixed;left:0;top:0;padding:16px">
+  <div style="margin-bottom:24px;padding:0 4px;display:flex;align-items:center;gap:10px">
+    <span class="ms" style="font-size:30px;color:#1f6d1a">agri</span>
+    <div><div style="font-family:Manrope;font-size:15px;font-weight:800;color:var(--pr)">AgriForecast ML</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--tm)">ML-DRIVEN INSIGHTS</div></div>
+  </div>
+  <nav style="flex:1;display:flex;flex-direction:column;gap:3px">
+    <a class="nl na" href="dashboard.html"><span class="ms">dashboard</span>Dashboard</a>
+    <a class="nl" href="predictor.html"><span class="ms">query_stats</span>Predictor</a>
+    <a class="nl" href="analytics.html"><span class="ms">analytics</span>Analytics</a>
+    <a class="nl" href="portfolio.html"><span class="ms">inventory_2</span>Portfolio</a>
+    <a class="nl" href="history.html"><span class="ms">history</span>History</a>
+  </nav>
+  <div style="padding-top:16px;border-top:1px solid var(--br);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tm)">
+    <span class="w-2 h-2 rounded-full pulse" id="sdot" style="background:#6b7280;display:inline-block;width:8px;height:8px;border-radius:50%"></span>
+    <span id="stxt">Connecting...</span>
+  </div>
+</aside>
+<main 
+  style="
+    flex:1;
+    padding:20px 20px 90px;
+    width:100%;
+  " 
+  class="md:ml-64"
+>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+    <div>
+      <h2 style="font-family:Manrope;font-size:22px;font-weight:800;color:var(--pr);margin:0">Market Dashboard</h2>
+      <p id="lupdated" style="font-size:13px;color:var(--tm);margin:2px 0 0">Loading market data...</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="mbadge" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:#166534;color:#fff">LIVE</span>
+      <button class="tbtn" onclick="toggleDark()"><span class="ms" id="tico" style="font-size:18px">dark_mode</span></button>
+      <button class="tbtn" onclick="loadDashboard()"><span class="ms" style="font-size:18px">refresh</span></button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:22px" class="lg:grid-cols-4">
+    <div class="card border rounded-xl" style="padding:16px;cursor:pointer" onclick="location.href='predictor.html'">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="ms" style="font-size:26px;color:#1f6d1a">grass</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--tm)">CROPS</span>
+      </div>
+      <div id="k1" style="font-family:Manrope;font-size:28px;font-weight:800;color:var(--pr)">—</div>
+      <div style="font-size:11px;color:var(--tm);margin-top:2px">Active commodities</div>
+    </div>
+    <div class="card border rounded-xl" style="padding:16px;cursor:pointer" onclick="location.href='analytics.html'">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="ms" style="font-size:26px;color:#1f6d1a">map</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--tm)">REGIONS</span>
+      </div>
+      <div id="k2" style="font-family:Manrope;font-size:28px;font-weight:800;color:var(--pr)">—</div>
+      <div style="font-size:11px;color:var(--tm);margin-top:2px">Indian states</div>
+    </div>
+    <div class="card border rounded-xl" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="ms" style="font-size:26px;color:#1f6d1a">neurology</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--tm)">ACCURACY</span>
+      </div>
+      <div id="k3" style="font-family:Manrope;font-size:28px;font-weight:800;color:var(--pr)">—</div>
+      <div style="font-size:11px;color:var(--tm);margin-top:2px">RandomForest v2.1</div>
+    </div>
+    <div class="card border rounded-xl" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="ms" style="font-size:26px;color:#1f6d1a">price_check</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--tm)">AVG PRICE</span>
+      </div>
+      <div id="k4" style="font-family:Manrope;font-size:22px;font-weight:800;color:var(--pr)">—</div>
+      <div style="font-size:11px;color:var(--tm);margin-top:2px">per quintal (INR)</div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div style="display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:18px" class="lg:grid-cols-3">
+    <div class="card border rounded-xl lg:col-span-2" style="padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0">Weekly Market Index</h3>
+        <span style="font-size:10px;font-weight:700;color:var(--tm)">₹/QUINTAL</span>
+      </div>
+      <canvas id="trendChart" height="95"></canvas>
+    </div>
+    <div class="card border rounded-xl" style="padding:20px">
+      <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0 0 14px">Top Movers</h3>
+      <div style="font-size:10px;font-weight:700;color:#1f6d1a;margin-bottom:7px">▲ GAINERS</div>
+      <div id="glist" style="margin-bottom:14px"></div>
+      <div style="font-size:10px;font-weight:700;color:#dc2626;margin-bottom:7px">▼ LOSERS</div>
+      <div id="llist"></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card border rounded-xl overflow-hidden" style="margin-bottom:18px">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--br)">
+      <h3 style="font-family:Manrope;font-size:15px;font-weight:700;color:var(--pr);margin:0">Live Crop Prices</h3>
+      <a href="predictor.html" style="font-size:12px;font-weight:700;color:#1f6d1a;text-decoration:none;display:flex;align-items:center;gap:3px">PREDICT <span class="ms" style="font-size:16px">arrow_forward</span></a>
+    </div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="background:var(--ib)">
+            <th style="padding:10px 16px;text-align:left;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm)">CROP</th>
+            <th style="padding:10px 16px;text-align:right;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm)">PRICE (₹/QUINTAL)</th>
+            <th style="padding:10px 16px;text-align:right;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm)">24H CHANGE</th>
+            <th style="padding:10px 16px;text-align:right;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm)">SEASON</th>
+            <th style="padding:10px 16px;text-align:right;border-bottom:1px solid var(--br);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--tm)">ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="ctbl"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="background:linear-gradient(135deg,#012d1d,#1f6d1a);border-radius:16px;padding:28px;position:relative;overflow:hidden">
+    <div style="max-width:480px;position:relative;z-index:1">
+      <h3 style="font-family:Manrope;font-size:18px;font-weight:800;color:#fff;margin:0 0 8px">🌾 Quick Price Prediction</h3>
+      <p style="font-size:13px;color:#a4f792;margin:0 0 16px">ML-powered forecasts across 15 Indian states and 10 crops.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="predictor.html" style="background:#a4f792;color:#012d1d;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:800;text-decoration:none">OPEN PREDICTOR →</a>
+        <a href="analytics.html" style="border:1px solid rgba(255,255,255,.35);color:#fff;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none">VIEW ANALYTICS</a>
+      </div>
+    </div>
+    <span class="ms" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:140px;color:rgba(255,255,255,.06)">neurology</span>
+  </div>
+</main>
+</div>
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16" style="background:var(--sb);border-top:1px solid var(--br)">
+  <a href="dashboard.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;font-weight:700;color:#1f6d1a;text-decoration:none"><span class="ms" style="font-size:22px">dashboard</span>Home</a>
+  <a href="predictor.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">query_stats</span>Predict</a>
+  <a href="analytics.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">analytics</span>Analytics</a>
+  <a href="portfolio.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">inventory_2</span>Portfolio</a>
+  <a href="history.html" style="display:flex;flex-direction:column;align-items:center;font-size:9px;color:var(--tm);text-decoration:none"><span class="ms" style="font-size:22px">history</span>History</a>
+</nav>
+<script>
+const API='http://localhost:5000';
+let tC=null;
+function applyTheme(dark){document.documentElement.classList.toggle('dark',dark);document.getElementById('tico').textContent=dark?'light_mode':'dark_mode';localStorage.setItem('agri_theme',dark?'dark':'light');}
+function toggleDark(){applyTheme(!document.documentElement.classList.contains('dark'));loadDashboard();}
+applyTheme(localStorage.getItem('agri_theme')==='dark');
+async function loadDashboard(){
+  try{
+    const d=(await (await fetch(`${API}/api/dashboard`)).json());
+    document.getElementById('sdot').style.background='#22c55e';
+    document.getElementById('stxt').textContent=`Model: ${d.kpis.model_accuracy}% acc.`;
+    document.getElementById('mbadge').textContent=d.market_status;
+    document.getElementById('lupdated').textContent='Updated: '+d.last_updated;
+    document.getElementById('k1').textContent=d.kpis.total_crops;
+    document.getElementById('k2').textContent=d.kpis.regions_covered;
+    document.getElementById('k3').textContent=d.kpis.model_accuracy+'%';
+    document.getElementById('k4').textContent='₹'+Number(d.kpis.avg_market_price_inr).toLocaleString('en-IN',{maximumFractionDigits:0});
+    const dk=document.documentElement.classList.contains('dark');
+    const gc=dk?'#1e3025':'#e2e8e4',tc=dk?'#8aaa94':'#5a6b62';
+    if(tC)tC.destroy();
+    tC=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:d.weekly_trend.map(w=>w.label),datasets:[{label:'₹ Index',data:d.weekly_trend.map(w=>+(w.value*83.5).toFixed(0)),borderColor:dk?'#4ade80':'#012d1d',backgroundColor:dk?'rgba(74,222,128,.08)':'rgba(1,45,29,.07)',borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:dk?'#4ade80':'#1f6d1a',pointRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:gc},ticks:{color:tc,callback:v=>'₹'+Math.round(v).toLocaleString('en-IN')}},x:{grid:{display:false},ticks:{color:tc}}}}});
+    document.getElementById('glist').innerHTML=d.top_gainers.map(c=>`<div onclick="location.href='predictor.html?crop=${c.crop}'" style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;cursor:pointer;border-radius:6px" onmouseover="this.style.background='var(--ib)'" onmouseout="this.style.background=''"><span style="font-size:13px;font-weight:500">${c.crop}</span><span style="background:${document.documentElement.classList.contains('dark')?'#14532d':'#dcfce7'};color:${document.documentElement.classList.contains('dark')?'#86efac':'#166534'};font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px">+${c.change_pct.toFixed(1)}%</span></div>`).join('');
+    document.getElementById('llist').innerHTML=d.top_losers.map(c=>`<div onclick="location.href='predictor.html?crop=${c.crop}'" style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;cursor:pointer;border-radius:6px" onmouseover="this.style.background='var(--ib)'" onmouseout="this.style.background=''"><span style="font-size:13px;font-weight:500">${c.crop}</span><span style="background:${document.documentElement.classList.contains('dark')?'#450a0a':'#fee2e2'};color:${document.documentElement.classList.contains('dark')?'#fca5a5':'#991b1b'};font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px">${c.change_pct.toFixed(1)}%</span></div>`).join('');
+    document.getElementById('ctbl').innerHTML=d.crops_summary.map(c=>{const up=c.change_pct>=0;const dk2=document.documentElement.classList.contains('dark');return `<tr style="border-bottom:1px solid var(--br);cursor:pointer;transition:background .1s" onclick="location.href='predictor.html?crop=${c.crop}'" onmouseover="this.style.background='var(--ib)'" onmouseout="this.style.background=''"><td style="padding:12px 16px"><div style="display:flex;align-items:center;gap:8px"><span class="ms" style="color:#1f6d1a">${c.icon}</span><span style="font-weight:600">${c.crop}</span></div></td><td style="padding:12px 16px;text-align:right;font-weight:700;font-family:monospace">₹${Number(c.price_inr).toLocaleString('en-IN',{maximumFractionDigits:0})}</td><td style="padding:12px 16px;text-align:right"><span style="display:flex;align-items:center;justify-content:flex-end;gap:3px;font-size:12px;font-weight:600;color:${up?'#166534':'#991b1b'}"><span class="ms" style="font-size:14px">${up?'trending_up':'trending_down'}</span>${up?'+':''}${c.change_pct.toFixed(2)}%</span></td><td style="padding:12px 16px;text-align:right">${c.is_season?`<span style="background:${dk2?'#14532d':'#dcfce7'};color:${dk2?'#86efac':'#166534'};font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px">PEAK</span>`:`<span style="background:var(--ib);color:var(--tm);font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px">OFF</span>`}</td><td style="padding:12px 16px;text-align:right"><a href="predictor.html?crop=${c.crop}" style="font-size:11px;font-weight:700;color:#1f6d1a;text-decoration:none">PREDICT →</a></td></tr>`;}).join('');
+  }catch(e){document.getElementById('sdot').style.background='#ef4444';document.getElementById('stxt').textContent='Server offline';}
+}
+loadDashboard();
+</script>
+</body></html>
